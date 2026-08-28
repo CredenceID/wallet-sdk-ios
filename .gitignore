@@ -1,0 +1,7 @@
+# Built artifacts staged by Scripts/release.sh. The binaries are distributed as GitHub
+# release assets and must never be committed — the repository stays small and the
+# checksum in Package.swift is the only thing pinning them.
+dist/
+.build/
+*.xcframework
+*.xcframework.zip

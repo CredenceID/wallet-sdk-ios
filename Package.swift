@@ -1,0 +1,68 @@
+// swift-tools-version: 5.9
+//
+//  Wallet SDK — Swift Package distribution
+//  © 2026 Credence ID LLC. All rights reserved. Internal distribution only.
+//
+//      .package(url: "https://github.com/CredenceID/wallet-sdk-ios.git", exact: "0.1.0-RC19")
+//
+//  This repository carries the manifest only. The XCFramework is a release asset produced by
+//  the Wallet-SDK Jenkins pipeline; `binaryTarget` fetches it and refuses it unless the
+//  SHA-256 matches, so a tampered artifact cannot silently reach an app.
+//
+//  ── While this package is private ────────────────────────────────────────────────────────
+//  SPM fetches binary targets over plain HTTPS and sends no Xcode credentials, so a private
+//  release asset needs a ~/.netrc entry. Scripts/verify-access.sh checks yours in one command;
+//  README.md has the setup. Publishing the package makes that step disappear — nothing in
+//  this manifest changes.
+
+import PackageDescription
+
+// Bumped together by Scripts/release.sh; the checksum is computed from the built artifact.
+let release  = "0.1.0-RC19"
+let checksum = "0000000000000000000000000000000000000000000000000000000000000000"
+
+// Where the binary lives. Point this at a public host on the day the package goes public —
+// it is the only line that has to change.
+let assetURL = "https://github.com/CredenceID/Wallet-SDK/releases/download/" +
+               "\(release)/WalletSDK-\(release).xcframework.zip"
+
+let package = Package(
+    name: "WalletSDK",
+    platforms: [
+        // Matches the SDK's own deployment target. Kotlin/Native emits an arm64 device slice
+        // and an arm64/x86_64 simulator slice; there is no Catalyst or visionOS slice.
+        .iOS(.v17)
+    ],
+    products: [
+        // The credential lifecycle: provisioning, storage, presentation, authentication,
+        // revocation and configuration, plus logging and runtime security.
+        .library(
+            name: "WalletSDK",
+            targets: ["WalletSDK", "WalletSDKSupport"]
+        ),
+    ],
+    targets: [
+        .binaryTarget(
+            name: "WalletSDK",
+            url: assetURL,
+            checksum: checksum
+        ),
+
+        // Attaches the system libraries the Kotlin/Native runtime and SQLDelight's SQLite
+        // cinterop resolve against. A binaryTarget cannot carry linkerSettings, so this
+        // source-only target exists to hang them on.
+        //
+        // These are `.linkedLibrary`, deliberately, not `.unsafeFlags`: SPM rejects unsafe
+        // flags in any package consumed as a dependency, so a manifest using them would be
+        // unusable by the very apps this package exists to serve. `-ObjC` cannot be expressed
+        // safely here at all and must be set by the consuming app target — see README.md.
+        .target(
+            name: "WalletSDKSupport",
+            linkerSettings: [
+                .linkedLibrary("sqlite3"),
+                .linkedLibrary("c++"),
+                .linkedLibrary("z"),
+            ]
+        ),
+    ]
+)
