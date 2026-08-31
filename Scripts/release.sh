@@ -34,8 +34,8 @@ else
   # not bit-identical, and a mismatched checksum fails at resolution time for everyone.
   ZIP="$(mktemp -d)/$ASSET"
   echo "==> Downloading $ASSET"
-  curl -fsSL --netrc -o "$ZIP" "$URL" || {
-    echo "error: download failed. Run Scripts/verify-access.sh to diagnose." >&2
+  curl -fsSL -o "$ZIP" "$URL" || {
+    echo "error: download failed. Has the release been cut and the zip uploaded?" >&2
     exit 1
   }
 fi

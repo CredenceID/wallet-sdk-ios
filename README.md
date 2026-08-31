@@ -2,9 +2,12 @@
 
 Swift Package distribution of `WalletSDK.xcframework` for iOS.
 
-> **Internal distribution.** This repository is private. Access requires a CredenceID
-> GitHub account and a `~/.netrc` entry — see [Access](#access). Publishing the package
-> later removes that step and changes nothing else.
+> **Why this repository is public.** SPM fetches a `binaryTarget` with a plain HTTPS GET
+> and, at most, Basic auth from `~/.netrc`. GitHub does not serve *private* release assets
+> that way: `releases/download/…` answers 404 to any token, and the only authenticated
+> route is the REST asset endpoint, which SPM cannot use. A private repository therefore
+> cannot host an SPM binary target at all. Only the compiled XCFramework is published here;
+> the Kotlin source stays closed in `Wallet-SDK`.
 
 This repository carries the **manifest only**. The binary is a release asset produced by
 the `Wallet-SDK` Jenkins pipeline, fetched by SPM and rejected unless its SHA-256 matches
@@ -16,38 +19,6 @@ the checksum pinned in `Package.swift`.
 | Deployment target | iOS 17.0 |
 | Product | `WalletSDK` |
 | Binary source | release assets on this repository |
-
-## Access
-
-SPM downloads binary targets over plain HTTPS and **sends no Xcode credentials**, so a
-private release asset needs a `~/.netrc` entry. Without it, resolution fails with a
-checksum or "invalid archive" error that points nowhere near the real cause.
-
-1. Create a personal access token with `repo` scope at
-   <https://github.com/settings/tokens>.
-
-2. Add it to `~/.netrc`:
-
-   ```
-   machine github.com
-     login <your-github-username>
-     password <your-token>
-   ```
-
-3. Lock the file down — it holds a credential:
-
-   ```sh
-   chmod 600 ~/.netrc
-   ```
-
-4. Confirm it works before touching Xcode:
-
-   ```sh
-   Scripts/verify-access.sh
-   ```
-
-Git access to this repository itself uses your normal Xcode account or SSH key; `.netrc`
-is only for the binary download.
 
 ## Using it
 
@@ -109,20 +80,11 @@ It checksums **the published bytes**, not a local rebuild — Kotlin/Native outp
 bit-identical between builds, and a mismatched checksum fails resolution for every
 consumer at once.
 
-## Going public
-
-**One change:** flip this repository's visibility. The binary is a release asset here, so it
-becomes public with it — `assetURL` does not move, and no pipeline change is needed. The
-`~/.netrc` step in [Access](#access) then becomes unnecessary; delete that section.
-
-Nothing about the package structure, product name, or consumer snippet changes.
-
 ## Layout
 
 ```
 Package.swift                       manifest — version, checksum, asset URL
 Scripts/release.sh                  cut a release
-Scripts/verify-access.sh            diagnose private-binary access
 Sources/WalletSDKSupport/Empty.swift  carries the linkerSettings a binaryTarget cannot
 ```
 

@@ -9,11 +9,9 @@
 //  the Wallet-SDK Jenkins pipeline; `binaryTarget` fetches it and refuses it unless the
 //  SHA-256 matches, so a tampered artifact cannot silently reach an app.
 //
-//  ── While this package is private ────────────────────────────────────────────────────────
-//  SPM fetches binary targets over plain HTTPS and sends no Xcode credentials, so a private
-//  release asset needs a ~/.netrc entry. Scripts/verify-access.sh checks yours in one command;
-//  README.md has the setup. Publishing the package makes that step disappear — nothing in
-//  this manifest changes.
+//  The repository is public, and has to be: SPM fetches a binary target with a plain HTTPS
+//  GET, and GitHub answers 404 to any token on a *private* release asset. Only this manifest
+//  and the compiled XCFramework live here; the Kotlin source stays closed in Wallet-SDK.
 
 import PackageDescription
 
@@ -23,14 +21,10 @@ let checksum = "1bbe7a56e8a035702edcc1001d1d8f81df1407a31fc80bedff7c44cc38ed2434
 
 // Where the binary lives: a release asset on THIS repository, deliberately.
 //
-// It must not live on Wallet-SDK. That repository holds the Kotlin source, and a consumer
-// whose token cannot read it cannot fetch the artifact either — so hosting the binary there
-// would mean granting every integrator access to the source in order to let them resolve
-// the package. Publishing it here keeps the source closed while the binary stays reachable
-// by anyone granted this repository.
-//
-// On the day the package goes public this line does not change; only the repository's
-// visibility does.
+// It must not live on Wallet-SDK. That repository holds the Kotlin source and is private,
+// which rules it out twice over: SPM cannot authenticate to a private release asset at all,
+// and hosting the binary beside the source would mean opening the source to publish a
+// binary. Here, the source stays closed and the artifact stays reachable.
 let assetURL = "https://github.com/CredenceID/wallet-sdk-ios/releases/download/" +
                "\(release)/WalletSDK-\(release).xcframework.zip"
 
