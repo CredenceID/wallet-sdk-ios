@@ -15,7 +15,7 @@ the checksum pinned in `Package.swift`.
 
 | | |
 |---|---|
-| Current release | `0.1.0-RC19` |
+| Current release | `0.1.0-RC20` |
 | Deployment target | iOS 17.0 |
 | Product | `WalletSDK` |
 | Binary source | release assets on this repository |
@@ -26,7 +26,7 @@ the checksum pinned in `Package.swift`.
 dependencies: [
     .package(
         url: "https://github.com/CredenceID/wallet-sdk-ios.git",
-        exact: "0.1.0-RC19"
+        exact: "0.1.0-RC20"
     )
 ],
 targets: [
@@ -39,7 +39,7 @@ targets: [
 **Pin with `exact:`.** Every release so far is a semver pre-release, and SPM's range rules
 (*Up to Next Major*, *Up to Next Minor*) never resolve to a pre-release — a range silently
 finds no version at all. The version matches the Android artifact
-(`com.credenceid:wallet-sdk:0.1.0-RC19`) because both come from the same git tag; pin both
+(`com.credenceid:wallet-sdk:0.1.0-RC20`) because both come from the same git tag; pin both
 platforms to the same version.
 
 **One required app-target setting.** The package attaches `libsqlite3`, `libc++` and
@@ -66,10 +66,10 @@ Tags here must match `Wallet-SDK` release tags exactly — the tag is what SPM r
 
 ```sh
 # after the pipeline has published the release asset
-Scripts/release.sh 0.1.0-RC20
+Scripts/release.sh 0.1.0-RC21
 
 # or against a locally built zip, before it is published
-Scripts/release.sh 0.1.0-RC20 /path/to/WalletSDK-0.1.0-RC20.xcframework.zip
+Scripts/release.sh 0.1.0-RC21 /path/to/WalletSDK-0.1.0-RC21.xcframework.zip
 ```
 
 The script downloads the published asset, computes the SPM checksum, rewrites
