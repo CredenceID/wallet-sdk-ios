@@ -2,9 +2,13 @@
 #
 # Cuts a Wallet SDK Swift Package release.
 #
-# Computes the SPM checksum of an XCFramework zip already published by the Wallet-SDK
-# pipeline, rewrites Package.swift, and prints the git commands to tag it. Nothing is
-# pushed and no release is created — this script only prepares the working tree.
+# Computes the SPM checksum of an XCFramework zip, rewrites Package.swift, and prints the
+# git commands to tag it. Nothing is pushed and no release is created — this script only
+# prepares the working tree.
+#
+# The Wallet-SDK Jenkins pipeline calls this with the zip it just built and then runs the
+# commit/tag/push itself, so the normal release needs no one to run this by hand. Reach for
+# it for a release the pipeline could not cut.
 #
 #   # against the published release asset (normal path)
 #   Scripts/release.sh 0.1.0-RC20
@@ -19,7 +23,7 @@ LOCAL_ZIP="${2:-}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 ASSET="WalletSDK-${VERSION}.xcframework.zip"
-URL="https://github.com/CredenceID/Wallet-SDK/releases/download/${VERSION}/${ASSET}"
+URL="https://github.com/CredenceID/wallet-sdk-ios/releases/download/${VERSION}/${ASSET}"
 
 if [[ -n "$LOCAL_ZIP" ]]; then
   [[ -f "$LOCAL_ZIP" ]] || { echo "error: no such file: $LOCAL_ZIP" >&2; exit 1; }

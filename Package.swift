@@ -21,9 +21,17 @@ import PackageDescription
 let release  = "0.1.0-RC19"
 let checksum = "0000000000000000000000000000000000000000000000000000000000000000"
 
-// Where the binary lives. Point this at a public host on the day the package goes public —
-// it is the only line that has to change.
-let assetURL = "https://github.com/CredenceID/Wallet-SDK/releases/download/" +
+// Where the binary lives: a release asset on THIS repository, deliberately.
+//
+// It must not live on Wallet-SDK. That repository holds the Kotlin source, and a consumer
+// whose token cannot read it cannot fetch the artifact either — so hosting the binary there
+// would mean granting every integrator access to the source in order to let them resolve
+// the package. Publishing it here keeps the source closed while the binary stays reachable
+// by anyone granted this repository.
+//
+// On the day the package goes public this line does not change; only the repository's
+// visibility does.
+let assetURL = "https://github.com/CredenceID/wallet-sdk-ios/releases/download/" +
                "\(release)/WalletSDK-\(release).xcframework.zip"
 
 let package = Package(

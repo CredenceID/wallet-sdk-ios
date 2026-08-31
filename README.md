@@ -15,7 +15,7 @@ the checksum pinned in `Package.swift`.
 | Current release | `0.1.0-RC19` |
 | Deployment target | iOS 17.0 |
 | Product | `WalletSDK` |
-| Binary source | `CredenceID/Wallet-SDK` release assets |
+| Binary source | release assets on this repository |
 
 ## Access
 
@@ -84,6 +84,13 @@ selector-not-found failures at runtime rather than errors at link time.
 
 ## Cutting a release
 
+**Jenkins does this.** The `Wallet-SDK` pipeline publishes the XCFramework here on a tagged
+master build or a `release`-branch build, then checksums the artifact, commits `Package.swift`
+and pushes the tag. The version comes from `VERSION_NAME` in `Wallet-SDK/gradle.properties`,
+so it matches the Android artifact of the same build. Bump `VERSION_NAME` per RC: a second
+build at a version already published skips rather than overwriting a consumed binary.
+
+The steps below are the same thing by hand, for a release the pipeline could not cut.
 Tags here must match `Wallet-SDK` release tags exactly — the tag is what SPM resolves.
 
 ```sh
@@ -104,13 +111,9 @@ consumer at once.
 
 ## Going public
 
-Two changes, in this order:
-
-1. **Move the binary to a public host.** The manifest's `assetURL` is the only line that
-   needs editing. Until the *binary* is public, making this repository public does not
-   help — consumers still cannot download it.
-2. **Flip repository visibility.** The `~/.netrc` step in [Access](#access) then becomes
-   unnecessary; delete that section.
+**One change:** flip this repository's visibility. The binary is a release asset here, so it
+becomes public with it — `assetURL` does not move, and no pipeline change is needed. The
+`~/.netrc` step in [Access](#access) then becomes unnecessary; delete that section.
 
 Nothing about the package structure, product name, or consumer snippet changes.
 
