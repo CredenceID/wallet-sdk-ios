@@ -3,7 +3,10 @@
 //  Wallet SDK — Swift Package distribution
 //  © 2026 Credence ID LLC. All rights reserved. Internal distribution only.
 //
-//      .package(url: "https://github.com/CredenceID/wallet-sdk-ios.git", exact: "0.1.0-RC19")
+//      .package(url: "https://github.com/CredenceID/wallet-sdk-ios.git", exact: <release>)
+//
+//  where <release> is the version below — pinned exactly, because every release so far is a
+//  semver pre-release and SPM's range rules never resolve to one.
 //
 //  This repository carries the manifest only. The XCFramework is a release asset produced by
 //  the Wallet-SDK Jenkins pipeline; `binaryTarget` fetches it and refuses it unless the
