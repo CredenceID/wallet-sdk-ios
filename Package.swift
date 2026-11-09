@@ -19,8 +19,8 @@
 import PackageDescription
 
 // Bumped together by Scripts/release.sh; the checksum is computed from the built artifact.
-let release  = "0.1.0-RC23"
-let checksum = "b57c8773078cffd88311be8649673e3ef3ca84ea01185a10bc32f8eb9699efc1"
+let release  = "0.1.0-RC24"
+let checksum = "f7bcfcf34e33a1e4ca351332e50b54b313a1beb06625ea9e44762a2dd9292f37"
 
 // Where the binary lives: a release asset on THIS repository, deliberately.
 //
